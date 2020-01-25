@@ -1,34 +1,34 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn} from 'typeorm';
 
 @Entity()
 export class Category {
-  @PrimaryGeneratedColumn()
-  id: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column({nullable: true})
-  parentId: number;
+    @Column({nullable: true})
+    parentId: number;
 
-  @Column()
-  slug: string;
+    @Column()
+    slug: string;
 
-  @Column()
-  name: string;
+    @Column()
+    name: string;
 
-  @Column()
-  title: string;
+    @Column({nullable: true})
+    image: string;
 
-  @Column()
-  image: string;
+    @Column({nullable: true})
+    description: string;
 
-  @Column()
-  description: string;
+    @Column({nullable: true})
+    shortDescription: string;
 
-  @Column()
-  shortDescription: string;
+    @Column({nullable: true})
+    metaTitle: string;
 
-  @Column()
-  metaTitle: string;
+    @Column({nullable: true})
+    metaKeywords: string;
 
-  @Column()
-  metaKeywords: string;
+    @Column({nullable: true})
+    metaDescription: string;
 }

@@ -1,11 +1,15 @@
-import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors} from '@nestjs/common';
+import {FileInterceptor, FilesInterceptor} from '@nestjs/platform-express';
 import {CategoriesService} from './categories.service';
 import {Category} from './category.entity';
+import { diskStorage } from 'multer';
+import {editFileName, imageFileFilter} from '../utils/file-uploading.utils';
 
 @Controller('categories')
 export class CategoriesController {
 
-    constructor(private service: CategoriesService) { }
+    constructor(private service: CategoriesService) {
+    }
 
     @Get()
     getAll(@Param() params) {
@@ -18,13 +22,26 @@ export class CategoriesController {
     }
 
     @Post()
-    create(@Body() category: Category) {
-        return this.service.createCategory(category);
+    @UseInterceptors(FileInterceptor('image', {
+        storage: diskStorage({
+            destination: './files',
+            filename: editFileName,
+        }),
+        fileFilter: imageFileFilter,
+    }))
+    async create(@UploadedFile() file, @Body() category: Category) {
+        return this.service.createCategory(category, file);
     }
-
     @Put()
-    update(@Body() category: Category) {
-        return this.service.updateCategory(category);
+    @UseInterceptors(FileInterceptor('image', {
+        storage: diskStorage({
+            destination: './files',
+            filename: editFileName,
+        }),
+        fileFilter: imageFileFilter,
+    }))
+    update(@UploadedFile() file, @Body() category) {
+        return this.service.updateCategory(category, file);
     }
 
     @Delete(':id')
