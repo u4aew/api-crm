@@ -19,7 +19,7 @@ export class CategoriesService {
         return await this.categoriesRepository.findOne(id);
     }
 
-    async createCategory(category: Category, file) {
+    async createCategory(category, file) {
         const data = parseCategory(category, file);
         return await this.categoriesRepository.save(data);
     }
@@ -39,7 +39,7 @@ export class CategoriesService {
     }
 }
 
-const parseCategory = (category: Category, file) => {
+const parseCategory = (category, file) => {
     const {name, slug, description, parentId, shortDescription, metaTitle, metaDescription, metaKeywords} = category;
     let data = {
         name,
@@ -54,5 +54,7 @@ const parseCategory = (category: Category, file) => {
     if (file) {
         data = {...data, ...{image: file.filename}};
     }
+
+    console.log(data.parentId, 'data.parentId');
     return data;
 };

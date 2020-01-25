@@ -5,7 +5,7 @@ export class Category {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({nullable: true})
+    @Column({nullable: true, default: null})
     parentId: number;
 
     @Column()
