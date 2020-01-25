@@ -4,6 +4,7 @@ import {CategoriesModule} from './categories/categories.module';
 import {MulterModule} from '@nestjs/platform-express';
 import {AppController} from './app.controller';
 import { BrandsModule } from './brands/brands.module';
+import { AttributesModule } from './attributes/attributes.module';
 
 @Module({
     imports: [
@@ -13,6 +14,7 @@ import { BrandsModule } from './brands/brands.module';
         TypeOrmModule.forRoot(),
         CategoriesModule,
         BrandsModule,
+        AttributesModule,
     ],
     controllers: [AppController],
 })
