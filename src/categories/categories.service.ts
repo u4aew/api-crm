@@ -40,10 +40,11 @@ export class CategoriesService {
 }
 
 const parseCategory = (category: Category, file) => {
-    const {name, slug, description, shortDescription, metaTitle, metaDescription, metaKeywords} = category;
+    const {name, slug, description, parentId, shortDescription, metaTitle, metaDescription, metaKeywords} = category;
     let data = {
         name,
         slug,
+        parentId,
         description,
         shortDescription,
         metaTitle,
