@@ -55,6 +55,5 @@ const parseCategory = (category, file) => {
         data = {...data, ...{image: file.filename}};
     }
 
-    console.log(data.parentId, 'data.parentId');
     return data;
 };

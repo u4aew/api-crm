@@ -1,9 +1,9 @@
 import {Module} from '@nestjs/common';
-import {UsersModule} from './users/users.module';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {CategoriesModule} from './categories/categories.module';
 import {MulterModule} from '@nestjs/platform-express';
 import {AppController} from './app.controller';
+import { BrandsModule } from './brands/brands.module';
 
 @Module({
     imports: [
@@ -11,8 +11,8 @@ import {AppController} from './app.controller';
             dest: './files',
         }),
         TypeOrmModule.forRoot(),
-        UsersModule,
         CategoriesModule,
+        BrandsModule,
     ],
     controllers: [AppController],
 })
