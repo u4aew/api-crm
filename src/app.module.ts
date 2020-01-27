@@ -5,6 +5,7 @@ import {MulterModule} from '@nestjs/platform-express';
 import {AppController} from './app.controller';
 import { BrandsModule } from './brands/brands.module';
 import { AttributesModule } from './attributes/attributes.module';
+import { TypeProductsModule } from './type-products/type-products.module';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { AttributesModule } from './attributes/attributes.module';
         CategoriesModule,
         BrandsModule,
         AttributesModule,
+        TypeProductsModule,
     ],
     controllers: [AppController],
 })
