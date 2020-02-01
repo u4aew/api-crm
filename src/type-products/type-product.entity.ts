@@ -1,4 +1,5 @@
-import {Entity, Column, PrimaryGeneratedColumn} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable} from 'typeorm';
+import {Attribute} from '../attributes/attribute.entity';
 
 @Entity()
 export class TypeProduct {
@@ -7,4 +8,8 @@ export class TypeProduct {
 
     @Column()
     name: string;
+
+    @ManyToMany(type => Attribute)
+    @JoinTable()
+    attributes: Attribute[];
 }

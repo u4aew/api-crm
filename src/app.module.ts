@@ -6,6 +6,7 @@ import {AppController} from './app.controller';
 import { BrandsModule } from './brands/brands.module';
 import { AttributesModule } from './attributes/attributes.module';
 import { TypeProductsModule } from './type-products/type-products.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
     imports: [
@@ -17,8 +18,9 @@ import { TypeProductsModule } from './type-products/type-products.module';
         BrandsModule,
         AttributesModule,
         TypeProductsModule,
+        ProductsModule,
     ],
-    controllers: [AppController],
+    controllers: [AppController]
 })
 export class AppModule {
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Attribute} from './attribute.entity';
 import {Repository} from 'typeorm';
@@ -7,6 +7,7 @@ import {Repository} from 'typeorm';
 export class AttributesService {
     constructor(@InjectRepository(Attribute) private attributesRepository: Repository<Attribute>) {
     }
+
     async getAttributes(): Promise<Attribute[]> {
         return await this.attributesRepository.find({
             select: ['id', 'name'],
@@ -14,7 +15,7 @@ export class AttributesService {
     }
 
     async getAttribute(id: number) {
-        return await this.attributesRepository.findOne(id);
+        return await this.attributesRepository.findOne(id, {relations: ['type']});
     }
 
     async createAttribute(attribute: Attribute) {
