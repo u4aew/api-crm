@@ -16,10 +16,10 @@ export class ProductsService {
     }
 
     async getProduct(id: number) {
-        return await this.productsRepository.findOne(id);
+        return await this.productsRepository.findOne(id, {relations: ['category']});
     }
 
-    async createProduct(product, file) {
+    async createProduct(product: Product, file) {
         const data = parseData(product, file);
         return await this.productsRepository.save(data);
     }
@@ -39,8 +39,8 @@ export class ProductsService {
     }
 }
 
-const parseData = (category, file) => {
-    const {name, slug, description, price, shortDescription, metaTitle, metaDescription, metaKeywords} = category;
+const parseData = (product, file) => {
+    const {name, slug, description, price, shortDescription, metaTitle, metaDescription, metaKeywords, category} = product;
     let data = {
         name,
         slug,
@@ -50,6 +50,7 @@ const parseData = (category, file) => {
         metaTitle,
         metaDescription,
         metaKeywords,
+        category,
     };
     if (file) {
         data = {...data, ...{image: file.filename}};
