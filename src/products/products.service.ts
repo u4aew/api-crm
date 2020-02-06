@@ -40,7 +40,7 @@ export class ProductsService {
 }
 
 const parseData = (product, file) => {
-    const {name, slug, description, price, shortDescription, metaTitle, metaDescription, metaKeywords, category} = product;
+    const {name, slug, description, price, shortDescription, metaTitle, metaDescription, metaKeywords, brand, category} = product;
     let data = {
         name,
         slug,
@@ -51,6 +51,7 @@ const parseData = (product, file) => {
         metaDescription,
         metaKeywords,
         category,
+        brand,
     };
     if (file) {
         data = {...data, ...{image: file.filename}};
