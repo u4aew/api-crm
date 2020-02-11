@@ -10,9 +10,7 @@ export class CategoriesService {
     }
 
     async getCategories(): Promise<Category[]> {
-        return await this.categoriesRepository.find({
-            select: ['id', 'name'],
-        });
+        return await this.categoriesRepository.manager.getTreeRepository(Category).findTrees();
     }
 
     async getCategory(id: number) {
@@ -20,12 +18,12 @@ export class CategoriesService {
     }
 
     async createCategory(category, file) {
-        const data = parseCategory(category, file);
+        const data = parseDate(category, file);
         return await this.categoriesRepository.save(data);
     }
 
     async updateCategory(category, file) {
-        let data = parseCategory(category, file);
+        let data = parseDate(category, file);
 
         if (category.removeImage) {
             data = {...data, ...{image: null}};
@@ -39,8 +37,13 @@ export class CategoriesService {
     }
 }
 
-const parseCategory = (category, file) => {
-    const {name, slug, description, parentId, shortDescription, metaTitle, metaDescription, metaKeywords} = category;
+const parseDate = (category, file) => {
+    const {name, slug, description, shortDescription, metaTitle, parentId, metaDescription, metaKeywords} = category;
+    let parent = null;
+    if (parentId) {
+        parent = new Category();
+        parent.id = parentId;
+    }
     let data = {
         name,
         slug,
@@ -50,6 +53,7 @@ const parseCategory = (category, file) => {
         metaTitle,
         metaDescription,
         metaKeywords,
+        parent,
     };
     if (file) {
         data = {...data, ...{image: file.filename}};
