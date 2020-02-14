@@ -6,8 +6,7 @@ import {Repository} from 'typeorm';
 @Injectable()
 export class CategoriesService {
 
-    constructor(@InjectRepository(Category) private categoriesRepository: Repository<Category>) {
-    }
+    constructor(@InjectRepository(Category) private categoriesRepository: Repository<Category>) {}
 
     async getCategories(): Promise<Category[]> {
         return await this.categoriesRepository.manager.getTreeRepository(Category).findTrees();
@@ -39,25 +38,22 @@ export class CategoriesService {
 
 const parseDate = (category, file) => {
     const {name, slug, description, shortDescription, metaTitle, parentId, metaDescription, metaKeywords} = category;
-    let parent = null;
-    if (parentId) {
-        parent = new Category();
-        parent.id = parentId;
-    }
     let data = {
         name,
         slug,
-        parentId,
         description,
         shortDescription,
         metaTitle,
         metaDescription,
         metaKeywords,
-        parent,
     };
     if (file) {
         data = {...data, ...{image: file.filename}};
     }
-
+    if (parentId) {
+        const parent = new Category();
+        parent.id = parentId;
+        data = {...data, ...{parent}};
+    }
     return data;
 };
