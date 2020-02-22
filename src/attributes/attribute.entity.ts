@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinTable} from 'typeorm';
 import {AttributeType} from './attribute-type.entity';
 
 @Entity()
@@ -20,7 +20,7 @@ export class Attribute {
 
     @Column({nullable: true})
     optionRaw: string;
-
     @ManyToOne(type => AttributeType, attributeType => attributeType.attributes)
+    @JoinTable()
     type: AttributeType;
 }

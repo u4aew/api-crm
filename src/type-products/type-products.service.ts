@@ -16,7 +16,14 @@ export class TypeProductsService {
     }
 
     async getTypeProduct(id: number) {
-        return await this.typeProductsRepository.findOne(id, {relations: ['attributes']});
+        const result = [];
+        const typeProduct = await this.typeProductsRepository.findOne(id, {relations: ['attributes']});
+        for (const item of typeProduct.attributes) {
+            const test = await this.typeProductsRepository.manager.getRepository(Attribute).findOne(item.id, {relations: ['type']});
+            result.push({...item, ...{typeId: test.type.id}});
+        }
+        typeProduct.attributes = result;
+        return typeProduct;
     }
 
     async createTypeProduct(typeProduct: TypeProduct) {
