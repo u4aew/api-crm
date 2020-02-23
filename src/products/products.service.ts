@@ -1,6 +1,9 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Product} from './product.entity';
+import {ProductOption} from './product-option.entity';
+import {ProductOptionAttribute} from './product-option-attribute.entity';
+
 import {Repository} from 'typeorm';
 
 @Injectable()
@@ -21,7 +24,30 @@ export class ProductsService {
 
     async createProduct(product: Product, file) {
         const data = parseData(product, file);
-        return await this.productsRepository.save(data);
+        const options = data.options;
+        const saveData = await this.productsRepository.save(data);
+
+        // Сохраняем конфигурации товара
+        for (let item of options) {
+            const productModel = new Product();
+            productModel.id = saveData.id;
+            item = {...item, ...{product: productModel}};
+            const saveOption = await this.productsRepository.manager.getRepository(ProductOption).save(item);
+
+            // Сохраняем атрибуты для конфигурации
+            for (const element of item.attributes) {
+                const {value, attributeId} = element;
+                const productOption = new ProductOption();
+                productOption.id = saveOption.id;
+                await this.productsRepository.manager.getRepository(ProductOptionAttribute).save({
+                    value,
+                    attributeId,
+                    productOption,
+                });
+            }
+        }
+
+        return saveData;
     }
 
     async updateProduct(product, file) {
@@ -40,7 +66,7 @@ export class ProductsService {
 }
 
 const parseData = (product, file) => {
-    const {name, slug, description, price, shortDescription, metaTitle, metaDescription, metaKeywords, brand, category} = product;
+    const {name, slug, description, price, shortDescription, metaTitle, metaDescription, metaKeywords, brand, category, options} = product;
     let data = {
         name,
         slug,
@@ -52,10 +78,10 @@ const parseData = (product, file) => {
         metaKeywords,
         category,
         brand,
+        options: JSON.parse(options),
     };
     if (file) {
         data = {...data, ...{image: file.filename}};
     }
-
     return data;
 };
