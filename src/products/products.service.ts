@@ -3,7 +3,7 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {Product} from './product.entity';
 import {ProductOption} from './product-option.entity';
 import {ProductOptionAttribute} from './product-option-attribute.entity';
-
+import {TypeProduct} from '../type-products/type-product.entity';
 import {Repository} from 'typeorm';
 
 @Injectable()
@@ -19,35 +19,29 @@ export class ProductsService {
     }
 
     async getProduct(id: number) {
-        return await this.productsRepository.findOne(id, {relations: ['category']});
+        return await this.productsRepository.findOne(id, {relations: ['category', 'type', 'brand']});
+    }
+
+    async createProductOption(productOption) {
+        const product = new Product();
+        product.id = productOption.productId;
+        productOption.product = product;
+        productOption.attributes = JSON.parse(productOption.attributes);
+        const saveProductOption = await this.productsRepository.manager.getRepository(ProductOption).save(productOption);
+
+        for (const item of productOption.attributes) {
+            const productOptionModel = new ProductOption();
+            productOptionModel.id = saveProductOption.id;
+            item.productOption = productOptionModel;
+            await this.productsRepository.manager.getRepository(ProductOptionAttribute).save(item);
+        }
+
+        return 'success';
     }
 
     async createProduct(product: Product, file) {
         const data = parseData(product, file);
-        const options = data.options;
-        const saveData = await this.productsRepository.save(data);
-
-        // Сохраняем конфигурации товара
-        for (let item of options) {
-            const productModel = new Product();
-            productModel.id = saveData.id;
-            item = {...item, ...{product: productModel}};
-            const saveOption = await this.productsRepository.manager.getRepository(ProductOption).save(item);
-
-            // Сохраняем атрибуты для конфигурации
-            for (const element of item.attributes) {
-                const {value, attributeId} = element;
-                const productOption = new ProductOption();
-                productOption.id = saveOption.id;
-                await this.productsRepository.manager.getRepository(ProductOptionAttribute).save({
-                    value,
-                    attributeId,
-                    productOption,
-                });
-            }
-        }
-
-        return saveData;
+        return await this.productsRepository.save(data);
     }
 
     async updateProduct(product, file) {
@@ -66,11 +60,12 @@ export class ProductsService {
 }
 
 const parseData = (product, file) => {
-    const {name, slug, description, price, shortDescription, metaTitle, metaDescription, metaKeywords, brand, category, options} = product;
+    const {name, slug, description, shortDescription, metaTitle, metaDescription, metaKeywords, brand, category, typeId} = product;
+    const typeProduct = new TypeProduct();
+    typeProduct.id = typeId;
     let data = {
         name,
         slug,
-        price,
         description,
         shortDescription,
         metaTitle,
@@ -78,8 +73,9 @@ const parseData = (product, file) => {
         metaKeywords,
         category,
         brand,
-        options: JSON.parse(options),
+        type: typeProduct,
     };
+
     if (file) {
         data = {...data, ...{image: file.filename}};
     }

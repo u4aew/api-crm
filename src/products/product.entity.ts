@@ -1,7 +1,8 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn, OneToOne, JoinTable} from 'typeorm';
 import {Category} from '../categories/category.entity';
 import {Brand} from '../brands/brand.entity';
 import {ProductOption} from './product-option.entity';
+import {TypeProduct} from '../type-products/type-product.entity';
 
 @Entity()
 export class Product {
@@ -10,9 +11,6 @@ export class Product {
 
     @Column()
     slug: string;
-
-    @Column({default: 0})
-    price: number;
 
     @Column()
     name: string;
@@ -34,6 +32,10 @@ export class Product {
 
     @Column({nullable: true})
     metaDescription: string;
+
+    @ManyToOne(type => TypeProduct, typeProduct => typeProduct.products)
+    @JoinTable()
+    type: TypeProduct;
 
     @ManyToOne(type => Category, category => category.products)
     category: Category;

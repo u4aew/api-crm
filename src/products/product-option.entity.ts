@@ -11,6 +11,9 @@ export class ProductOption {
     title: string;
 
     @Column()
+    price: number;
+
+    @Column()
     available: string;
 
     @ManyToOne(type => Product, product => product.options)

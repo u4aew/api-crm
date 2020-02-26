@@ -21,6 +21,11 @@ export class ProductsController {
         return this.service.getProduct(params.id);
     }
 
+    @Post('/options/')
+    createProductOption(@Body() productOption) {
+        return this.service.createProductOption(productOption);
+    }
+
     @Post()
     @UseInterceptors(FileInterceptor('image', {
         storage: diskStorage({
