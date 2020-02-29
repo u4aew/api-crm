@@ -1,5 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany} from 'typeorm';
-import {ProductOption} from './product-option.entity';
+import {Entity, Column, PrimaryGeneratedColumn} from 'typeorm';
 
 @Entity()
 export class ProductOptionAttribute {
@@ -11,7 +10,4 @@ export class ProductOptionAttribute {
 
     @Column()
     attributeId: number;
-
-    @ManyToOne(type => ProductOption, productOption => productOption.attributes)
-    productOption: ProductOption;
 }

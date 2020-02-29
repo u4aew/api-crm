@@ -1,9 +1,10 @@
 import {Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors} from '@nestjs/common';
-import {FileInterceptor, FilesInterceptor} from '@nestjs/platform-express';
+import {FileInterceptor} from '@nestjs/platform-express';
 import {ProductsService} from './products.service';
 import {Product} from './product.entity';
 import {diskStorage} from 'multer';
 import {editFileName, imageFileFilter} from '../utils/file-uploading.utils';
+import {ProductOption} from './product-option.entity';
 
 @Controller('products')
 export class ProductsController {
@@ -21,9 +22,19 @@ export class ProductsController {
         return this.service.getProduct(params.id);
     }
 
+    @Put('/options/')
+    updateProductOption(@Body() productOption: ProductOption) {
+        return this.service.updateProductOption(productOption);
+    }
+
     @Post('/options/')
-    createProductOption(@Body() productOption) {
+    createProductOption(@Body() productOption: ProductOption) {
         return this.service.createProductOption(productOption);
+    }
+
+    @Post('/options/')
+    deleteProductOption(@Body() productOption: ProductOption) {
+        return this.service.deleteProductOption(productOption);
     }
 
     @Post()

@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn, OneToOne, JoinTable} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable} from 'typeorm';
 import {Category} from '../categories/category.entity';
 import {Brand} from '../brands/brand.entity';
 import {ProductOption} from './product-option.entity';
@@ -33,16 +33,20 @@ export class Product {
     @Column({nullable: true})
     metaDescription: string;
 
-    @ManyToOne(type => TypeProduct, typeProduct => typeProduct.products)
+    @ManyToOne(type => TypeProduct)
     @JoinTable()
     type: TypeProduct;
 
     @ManyToOne(type => Category, category => category.products)
+    @JoinTable()
     category: Category;
 
-    @ManyToOne(type => Brand, brand => brand.products)
+    @ManyToOne(type => Brand)
+    @JoinTable()
     brand: Brand;
 
-    @OneToMany(type => ProductOption, productOption => productOption.product)
-    options: ProductOption[];
+    @ManyToMany(type => ProductOption, {cascade: true})
+    @JoinTable()
+    productOptions: ProductOption[];
+
 }

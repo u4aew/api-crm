@@ -1,5 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany} from 'typeorm';
-import {Product} from './product.entity';
+import {Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable} from 'typeorm';
 import {ProductOptionAttribute} from './product-option-attribute.entity';
 
 @Entity()
@@ -14,11 +13,9 @@ export class ProductOption {
     price: number;
 
     @Column()
-    available: string;
+    available: boolean;
 
-    @ManyToOne(type => Product, product => product.options)
-    product: Product;
-
-    @OneToMany(type => ProductOptionAttribute, productOptionAttribute => productOptionAttribute.productOption)
+    @ManyToMany(type => ProductOptionAttribute, {cascade: true})
+    @JoinTable()
     attributes: ProductOptionAttribute[];
 }
