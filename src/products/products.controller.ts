@@ -32,9 +32,9 @@ export class ProductsController {
         return this.service.createProductOption(productOption);
     }
 
-    @Post('/options/')
-    deleteProductOption(@Body() productOption: ProductOption) {
-        return this.service.deleteProductOption(productOption);
+    @Delete('/options/:id')
+    deleteProductOption(@Param() params) {
+        return this.service.deleteProductOption(params.id);
     }
 
     @Post()

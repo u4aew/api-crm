@@ -9,8 +9,17 @@ export class ProductOption {
     @Column()
     title: string;
 
+    @Column({nullable: true})
+    idXML: number;
+
     @Column()
     price: number;
+
+    @Column({nullable: true})
+    priceOld: number;
+
+    @Column({default: false})
+    major: boolean;
 
     @Column()
     available: boolean;

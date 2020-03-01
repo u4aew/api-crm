@@ -40,10 +40,10 @@ export class ProductsService {
     }
 
     async createProductOption(form) {
-        const {title, available, price, productId} = form;
+        const {title, available, price, productId, priceOld, idXML, major} = form;
         const productOption = await this.productsRepository.manager
             .getRepository(ProductOption)
-            .save({title, available, price});
+            .save({title, available, price, priceOld, idXML, major});
 
         await this.productsRepository.manager.query(
             `INSERT INTO product_product_options_product_option (productId, productOptionId)VALUES (${productId}, ${productOption.id});`,
@@ -65,10 +65,10 @@ export class ProductsService {
     }
 
     async updateProductOption(productOption) {
-        const {title, price, available, id} = productOption;
+        const {title, price, available, id, priceOld, idXML, major} = productOption;
         await this.productsRepository.manager
             .getRepository(ProductOption)
-            .update(id, {title, price, available});
+            .update(id, {title, price, available, priceOld, idXML, major});
         for (const attribute of JSON.parse(productOption.attributes)) {
             const {value, attributeId} = attribute;
             await this.productsRepository.manager
@@ -81,8 +81,7 @@ export class ProductsService {
         };
     }
 
-    async deleteProductOption(productOption) {
-        const {id} = productOption;
+    async deleteProductOption(id) {
         await this.productsRepository.manager
             .getRepository(ProductOption)
             .delete(id);

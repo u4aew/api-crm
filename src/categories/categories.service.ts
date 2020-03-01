@@ -6,7 +6,8 @@ import {Repository} from 'typeorm';
 @Injectable()
 export class CategoriesService {
 
-    constructor(@InjectRepository(Category) private categoriesRepository: Repository<Category>) {}
+    constructor(@InjectRepository(Category) private categoriesRepository: Repository<Category>) {
+    }
 
     async getCategories(): Promise<Category[]> {
         return await this.categoriesRepository.manager.getTreeRepository(Category).findTrees();
